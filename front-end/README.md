@@ -3,7 +3,11 @@
 
 ## Requerimientos
 NodeJS v18.x.x
+
 NPM v9.5.x
+
+Bootstrap v5.x ( CDN )
+
 Angular CLI: para instalar Angular CLI ejecute el siguiente comando:
 ```sh
 npm install -g @angular/cli
