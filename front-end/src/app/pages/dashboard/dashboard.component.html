@@ -1,0 +1,197 @@
+<app-navbar></app-navbar>
+
+<!-- Listado de elementos -->
+<div class="container">
+    <h3 class="text-center mt-3"> Listado de productos </h3>
+
+    <div class="row">
+        <div class="col-12">
+            <!-- Tabla de datos -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"> Título</th>
+                        <th scope="col"> Descripción </th>
+                        <th scope="col"> Precio </th>
+                        <th scope="col"> Marca </th>
+                        <th scope="col"> Categoria </th>
+                        <th scope="col"> Editar </th>
+                        <th scope="col"> Eliminar </th>
+                        <th scope="col"> Cambios </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Recorremos los datos -->
+                    <tr *ngFor="let item of productos">
+                        <td> {{ item.title }} </td>
+                        <td> {{ item.description }} </td>
+                        <td> {{ item.price }} </td>
+                        <td> {{ item.brand }} </td>
+                        <td> {{ item.category }} </td>
+                        <td>
+                            <button class="btn-icon" type="button" (click)="editarItem(item)">
+                                <i class="fa-solid fa-file-pen"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn-icon trash" type="button" (click)="eliminarItem(item)">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn-icon trash" type="button" (click)="mostrarHistorial(item)">
+                                <i class="fa-regular fa-file"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de datos -->
+<!-- Button trigger modal -->
+<button type="button" class="d-none" data-bs-toggle="modal" data-bs-target="#modalForm" id="modalFormData">
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form [formGroup]="datosProducto" (ngSubmit)="onSubmit()" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Actualización de datos </h5>
+            </div>
+            <div class="modal-body">
+                <!-- Hacemos el formulario -->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="title" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="title" formControlName="title">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="price" class="form-label">Precio</label>
+                            <input type="number" class="form-control" id="price" formControlName="price">
+                        </div>
+                        <div class="col-12">
+                            <label for="description" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="description" formControlName="description"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="brand" class="form-label">Marca</label>
+                            <input type="text" class="form-control" id="brand" formControlName="brand">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="category" class="form-label">Categoria</label>
+                            <input type="text" class="form-control" id="category" formControlName="category">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modalIngreso">Cerrar </button>
+                <button type="submit" class="btn btn-primary" [disabled]="datosProducto.invalid"> Aceptar </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- Modal para mostrar todos los cambios -->
+<button type="button" class="d-none" data-bs-toggle="modal" data-bs-target="#modalCambios" id="modalCambiosData">
+</button>
+
+<div class="modal fade" id="modalCambios" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCambios"> Lista de cambios </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Si no hay registros  -->
+                <p *ngIf="productoOrigina.length <= 0 && productosHistoricos.length <= 0"> Sin registros </p>
+                <!-- Productos -->
+                <ol class="list-group list-group-numbered">
+                    <li *ngFor="let item of productoOrigina" class="list-group-item d-flex justify-content-between">
+                        <div class="ms-2 me-auto">
+                             <div class="d-flex">
+                                <div>
+                                    <span class="fw-bold"> Titulo  </span>
+                                    {{item.title }}
+                                </div>
+                             </div>
+                             <div>
+                                 <span class="fw-bold"> Descripción </span>
+                                 {{item.description }}
+                             </div>
+                             <div>
+                                 <span class="fw-bold"> Precio  </span>
+                                 {{item.price }}
+                             </div>
+                             <div>
+                                 <span class="fw-bold"> Marca  </span>
+                                 {{item.brand }}
+                             </div>
+                             <div>
+                                 <span class="fw-bold"> Categoria  </span>
+                                 {{item.category }}
+                             </div>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" [value]="item.producto_id" 
+                                    [id]="item.producto_id" 
+                                    data-catalogo = "productos" 
+                                    [(ngModel)] = "productoHistoricoSeleccionado.value"
+                                    (change)="changeHistorico($event)" >
+                            <label class="form-check-label" [for]="item.producto_id"> Seleccionar </label>
+                        </div>
+
+                    </li>
+
+                    <li *ngFor="let item of productosHistoricos"
+                        class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                             <div>
+                                 <span class="fw-bold"> Titulo  </span>
+                                 {{item.title }}
+                             </div>
+                             <div>
+                                 <span class="fw-bold"> Descripción </span>
+                                 {{item.description }}
+                             </div>
+                             <div>
+                                 <span class="fw-bold"> Precio  </span>
+                                 {{item.price }}
+                             </div>
+                             <div>
+                                 <span class="fw-bold"> Marca  </span>
+                                 {{item.brand }}
+                             </div>
+                             <div>
+                                 <span class="fw-bold"> Categoria  </span>
+                                 {{item.category }}
+                             </div>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" 
+                                  [value]="item.producto_historico_id" 
+                                  [id]="item.producto_historico_id" data-catalogo="historico" 
+                                  [(ngModel)] = "productoHistoricoSeleccionado.value"
+                                  (change)="changeHistorico($event)"
+                        >
+                            <label class="form-check-label" [for]="item.producto_historico_id"> Seleccionar </label>
+                        </div>
+                    </li>
+                </ol>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarModalHistorico">Cerrar </button>
+                <button type="button" class="btn btn-primary" type="submit" (click)="cambiarHistorico()"> Guardar </button>
+            </div>
+        </div>
+    </div>
+</div>

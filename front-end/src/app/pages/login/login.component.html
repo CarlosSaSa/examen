@@ -1,0 +1,25 @@
+<header class="inicio">
+    <section class="inicio__seccion">
+        <p class="inicio__seccion_login"> Iniciar Sesión </p>
+        <form class="inicio__seccion_formulario" [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <label for="usuario" class="form-label mb-2"> Usuario </label>
+                        <input type="text" class="form-control" id="usuario" formControlName="username">
+                    </div>
+                    <div class="col-12 mb-4">
+                        <label for="password" class="form-label mb-2"> Contraseña </label>
+                        <input type="password" class="form-control" id="password" formControlName="password">
+                    </div>
+                </div>
+
+                <div class="inicio__seccion_formulario_submit">
+                    <button type="submit" class="btn btn-primary" [disabled]="usuarioForm.invalid">Iniciar Sesión </button>
+                </div>
+
+            </div>
+        </form>
+
+    </section>
+</header>
